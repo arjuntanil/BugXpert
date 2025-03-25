@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="600" height="500" viewBox="0 0 600 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Bug Body -->
+  <ellipse cx="300" cy="280" rx="160" ry="130" fill="#4a6cf7" opacity="0.9"/>
+  
+  <!-- Bug Head -->
+  <circle cx="300" cy="170" r="70" fill="#4a6cf7" opacity="0.9"/>
+  
+  <!-- Antenna Left -->
+  <path d="M270 130 Q240 70 210 50" stroke="#24bddf" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="210" cy="50" r="10" fill="#24bddf"/>
+  
+  <!-- Antenna Right -->
+  <path d="M330 130 Q360 70 390 50" stroke="#24bddf" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="390" cy="50" r="10" fill="#24bddf"/>
+  
+  <!-- Eyes -->
+  <circle cx="270" cy="160" r="20" fill="white"/>
+  <circle cx="330" cy="160" r="20" fill="white"/>
+  <circle cx="270" cy="160" r="10" fill="#333"/>
+  <circle cx="330" cy="160" r="10" fill="#333"/>
+  
+  <!-- Smile -->
+  <path d="M270 190 Q300 220 330 190" stroke="white" stroke-width="6" stroke-linecap="round"/>
+  
+  <!-- Legs Left -->
+  <path d="M160 230 Q120 210 80 220" stroke="#24bddf" stroke-width="8" stroke-linecap="round"/>
+  <path d="M160 270 Q100 270 60 290" stroke="#24bddf" stroke-width="8" stroke-linecap="round"/>
+  <path d="M160 310 Q120 330 80 360" stroke="#24bddf" stroke-width="8" stroke-linecap="round"/>
+  
+  <!-- Legs Right -->
+  <path d="M440 230 Q480 210 520 220" stroke="#24bddf" stroke-width="8" stroke-linecap="round"/>
+  <path d="M440 270 Q500 270 540 290" stroke="#24bddf" stroke-width="8" stroke-linecap="round"/>
+  <path d="M440 310 Q480 330 520 360" stroke="#24bddf" stroke-width="8" stroke-linecap="round"/>
+  
+  <!-- Wings -->
+  <ellipse cx="260" cy="280" rx="80" ry="100" fill="#24bddf" opacity="0.3" transform="rotate(-10 260 280)"/>
+  <ellipse cx="340" cy="280" rx="80" ry="100" fill="#24bddf" opacity="0.3" transform="rotate(10 340 280)"/>
+  
+  <!-- Spots on Body -->
+  <circle cx="260" cy="240" r="15" fill="#24bddf" opacity="0.6"/>
+  <circle cx="340" cy="240" r="15" fill="#24bddf" opacity="0.6"/>
+  <circle cx="300" cy="270" r="15" fill="#24bddf" opacity="0.6"/>
+  <circle cx="260" cy="320" r="15" fill="#24bddf" opacity="0.6"/>
+  <circle cx="340" cy="320" r="15" fill="#24bddf" opacity="0.6"/>
+  
+  <!-- Binary code particles -->
+  <text x="100" y="150" fill="#4a6cf7" opacity="0.2" font-family="monospace" font-size="12">10011</text>
+  <text x="450" y="150" fill="#4a6cf7" opacity="0.2" font-family="monospace" font-size="12">01101</text>
+  <text x="150" y="400" fill="#4a6cf7" opacity="0.2" font-family="monospace" font-size="12">10110</text>
+  <text x="400" y="400" fill="#4a6cf7" opacity="0.2" font-family="monospace" font-size="12">01001</text>
+  
+  <!-- Code symbols -->
+  <text x="50" y="200" fill="#24bddf" opacity="0.3" font-family="monospace" font-size="20">{}</text>
+  <text x="520" y="200" fill="#24bddf" opacity="0.3" font-family="monospace" font-size="20">[]</text>
+  <text x="70" y="450" fill="#24bddf" opacity="0.3" font-family="monospace" font-size="20">/</text>
+  <text x="520" y="450" fill="#24bddf" opacity="0.3" font-family="monospace" font-size="20">;</text>
+</svg> 

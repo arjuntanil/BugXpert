@@ -1,0 +1,26 @@
+odule ID,Lines of Code (LOC),Complexity Score,Execution Time (ms),Defect Density (Defects per 1000 LOC),Code Quality
+1,100,2,10,0.2,High
+2,150,3,12,0.5,High
+3,200,4,15,0.8,High
+4,300,6,18,1.5,High
+5,400,8,22,2.2,Medium
+6,500,10,30,2.8,Medium
+7,600,12,40,3.5,Medium
+8,700,14,50,4.2,Medium
+9,800,16,60,4.9,Medium
+10,900,18,75,5.5,Medium
+11,1000,20,90,6.3,Low
+12,1200,22,110,7.2,Low
+13,1400,24,135,8.1,Low
+14,1600,26,160,9,Low
+15,1800,30,190,10,Low
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,

@@ -1,0 +1,16 @@
+bug_type,language,solution,doc_link
+Null Pointer Exception,Java,Check for null values before accessing object properties or methods. Use Optional<> for potentially null values.,https://docs.oracle.com/javase/tutorial/essential/exceptions/nullpointer.html
+IndexError: list index out of range,Python,Verify that your list index is within the valid range. Use len() to check list length.,https://docs.python.org/3/tutorial/datastructures.html
+Undefined variable,JavaScript,Declare variables before using them. Check for typos in variable names.,https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Undeclared_var
+SQL Injection vulnerability,SQL,Use parameterized queries or prepared statements instead of string concatenation.,https://owasp.org/www-community/attacks/SQL_Injection
+Memory leak,C++,"Ensure proper deallocation of memory. Use smart pointers (shared_ptr, unique_ptr) instead of raw pointers.",https://en.cppreference.com/w/cpp/memory/smart_ptr
+Infinite loop,Any,Verify loop termination condition and ensure the condition will eventually be met. Include a failsafe counter.,https://en.wikipedia.org/wiki/Infinite_loop
+Race condition,Multithreaded applications,"Use mutex locks, semaphores, or other synchronization mechanisms to protect shared resources.",https://docs.oracle.com/javase/tutorial/essential/concurrency/sync.html
+Division by zero,Any,Always check for zero before division operations. Implement try-catch blocks for division operations.,https://en.wikipedia.org/wiki/Division_by_zero
+Buffer overflow,C,Always check buffer boundaries. Use safer functions like strncpy instead of strcpy.,https://owasp.org/www-community/vulnerabilities/Buffer_Overflow
+Uncaught exception,Java/Python,Implement proper exception handling with try-catch blocks. Don't catch broad exceptions without specific handling.,https://docs.oracle.com/javase/tutorial/essential/exceptions/handling.html
+Cross-site scripting (XSS),Web applications,Sanitize and escape user input. Use Content Security Policy (CSP) headers.,https://owasp.org/www-community/attacks/xss/
+Deadlock,Multithreaded applications,Always acquire locks in the same order. Use timeouts for lock acquisition.,https://docs.oracle.com/javase/tutorial/essential/concurrency/deadlock.html
+Off-by-one error,Any,Be careful with loop boundaries and array indices. Double-check array indexing logic.,https://en.wikipedia.org/wiki/Off-by-one_error
+Integer overflow,C/C++,Use appropriate data types for the expected range of values. Check for overflow before arithmetic operations.,https://en.wikipedia.org/wiki/Integer_overflow
+Syntax error,Any,"Check for missing brackets, semicolons, or parentheses. Verify language syntax rules.",https://en.wikipedia.org/wiki/Syntax_error

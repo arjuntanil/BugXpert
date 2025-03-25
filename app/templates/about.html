@@ -1,0 +1,325 @@
+{% extends "base.html" %}
+
+{% block title %}BugXpert - About{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">About</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    
+    <div class="row mb-5">
+        <div class="col-12 text-center animate-on-scroll">
+            <h1 class="fw-bold mb-3">About BugXpert</h1>
+            <p class="text-muted">Learn more about the project and the developer</p>
+        </div>
+    </div>
+    
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-lg animated-card">
+                <div class="card-header">
+                    <h2 class="card-title text-center mb-0">The Project</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-4 text-center mb-4 mb-md-0">
+                            <i class="fas fa-bug text-primary" style="font-size: 7rem;"></i>
+                        </div>
+                        <div class="col-md-8">
+                            <h4 class="mb-3">BugXpert: Software Bug Prediction & Classification</h4>
+                            <p>BugXpert is a comprehensive solution designed to help software developers identify, classify, and fix bugs efficiently before release. Our system combines multiple machine learning techniques to predict the number of bugs, classify their criticality, and assess code quality.</p>
+                            
+                            <div class="alert alert-info mt-3">
+                                <div class="d-flex">
+                                    <div class="me-3">
+                                        <i class="fas fa-lightbulb text-primary fa-2x"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1">Project Vision</h5>
+                                        <p class="mb-0">To enhance software quality by providing developers with powerful, accurate, and easy-to-use predictive tools that integrate seamlessly into modern development workflows.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-lg animated-card">
+                <div class="card-header">
+                    <h2 class="card-title text-center mb-0">Developer Profile</h2>
+                </div>
+                <div class="card-body">
+                    <div class="developer-profile">
+                        <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="Developer" class="profile-img" onerror="this.src='https://via.placeholder.com/150?text=AR';this.onerror='';">
+                        <h4 class="mt-3 mb-2">Arjun Tanil</h4>
+                        <p class="text-muted mb-3">Machine Learning Engineer & Full Stack Developer</p>
+                        
+                        <div class="d-flex justify-content-center mb-4">
+                            <a href="https://www.linkedin.com/in/arjuntanil/" target="_blank" class="btn btn-outline-primary me-2">
+                                <i class="fab fa-linkedin me-1"></i> LinkedIn
+                            </a>
+                            <a href="https://github.com/" target="_blank" class="btn btn-outline-dark">
+                                <i class="fab fa-github me-1"></i> GitHub
+                            </a>
+                        </div>
+                        
+                        <p>Passionate about developing intelligent solutions that solve real-world problems. Specialized in machine learning, data science, and web development.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-lg animated-card">
+                <div class="card-header">
+                    <h2 class="card-title text-center mb-0">Model Performance</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 mb-4 text-center">
+                            <p>BugXpert uses high-performance machine learning models to deliver accurate predictions and classifications.</p>
+                        </div>
+                        
+                        <div class="col-md-4 mb-4">
+                            <div class="metrics-card">
+                                <i class="fas fa-chart-line text-primary mb-3" style="font-size: 2rem;"></i>
+                                <div class="metrics-value" id="poly-r2-score">0.99+</div>
+                                <div class="metrics-label">Polynomial Regression R² Score</div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-4">
+                            <div class="metrics-card">
+                                <i class="fas fa-bullseye text-primary mb-3" style="font-size: 2rem;"></i>
+                                <div class="metrics-value" id="lr-accuracy">0.95+</div>
+                                <div class="metrics-label">Logistic Regression Accuracy</div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-4">
+                            <div class="metrics-card">
+                                <i class="fas fa-code-branch text-primary mb-3" style="font-size: 2rem;"></i>
+                                <div class="metrics-value" id="knn-accuracy">0.90+</div>
+                                <div class="metrics-label">KNN Classification Accuracy</div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="metrics-card">
+                                <i class="fas fa-check-double text-primary mb-3" style="font-size: 2rem;"></i>
+                                <div class="metrics-value" id="lr-precision">0.98+</div>
+                                <div class="metrics-label">Critical Bug Precision</div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="metrics-card">
+                                <i class="fas fa-search text-primary mb-3" style="font-size: 2rem;"></i>
+                                <div class="metrics-value" id="lr-recall">0.97+</div>
+                                <div class="metrics-label">Critical Bug Recall</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-lg animated-card">
+                <div class="card-header">
+                    <h2 class="card-title text-center mb-0">Our Machine Learning Algorithms</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="card-title mb-0">Polynomial Regression</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="small">Used for predicting the number of bugs expected in a software module based on lines of code.</p>
+                                    <ul class="small">
+                                        <li>Captures non-linear relationships</li>
+                                        <li>Provides accurate count predictions</li>
+                                        <li>Helps plan testing resources</li>
+                                    </ul>
+                                </div>
+                                <div class="card-footer bg-light">
+                                    <small>Feature: <strong>Bug Prediction</strong></small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header bg-danger text-white">
+                                    <h5 class="card-title mb-0">Logistic Regression</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="small">Used to classify bugs as critical or non-critical based on their characteristics.</p>
+                                    <ul class="small">
+                                        <li>Binary classification (critical/non-critical)</li>
+                                        <li>Provides probability of criticality</li>
+                                        <li>Helps prioritize bug fixes</li>
+                                    </ul>
+                                </div>
+                                <div class="card-footer bg-light">
+                                    <small>Feature: <strong>Bug Classification</strong></small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="card-title mb-0">K-Nearest Neighbors</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="small">Used to classify software modules based on their code quality (High, Medium, Low).</p>
+                                    <ul class="small">
+                                        <li>Multi-class classification</li>
+                                        <li>Based on similar module comparison</li>
+                                        <li>Helps identify quality improvement areas</li>
+                                    </ul>
+                                </div>
+                                <div class="card-footer bg-light">
+                                    <small>Feature: <strong>Code Quality Classification</strong></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-lg animated-card">
+                <div class="card-header">
+                    <h2 class="card-title text-center mb-0">Technologies Used</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6 col-md-3 mb-4">
+                            <div class="p-3 h-100">
+                                <i class="fab fa-python text-primary mb-3" style="font-size: 2.5rem;"></i>
+                                <h5>Python</h5>
+                                <p class="small text-muted">Core programming language</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-6 col-md-3 mb-4">
+                            <div class="p-3 h-100">
+                                <i class="fas fa-flask text-primary mb-3" style="font-size: 2.5rem;"></i>
+                                <h5>Flask</h5>
+                                <p class="small text-muted">Web framework</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-6 col-md-3 mb-4">
+                            <div class="p-3 h-100">
+                                <i class="fas fa-brain text-primary mb-3" style="font-size: 2.5rem;"></i>
+                                <h5>Scikit-learn</h5>
+                                <p class="small text-muted">Machine learning library</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-6 col-md-3 mb-4">
+                            <div class="p-3 h-100">
+                                <i class="fas fa-chart-bar text-primary mb-3" style="font-size: 2.5rem;"></i>
+                                <h5>Matplotlib</h5>
+                                <p class="small text-muted">Data visualization</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-6 col-md-3 mb-4">
+                            <div class="p-3 h-100">
+                                <i class="fas fa-table text-primary mb-3" style="font-size: 2.5rem;"></i>
+                                <h5>Pandas</h5>
+                                <p class="small text-muted">Data manipulation</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-6 col-md-3 mb-4">
+                            <div class="p-3 h-100">
+                                <i class="fas fa-calculator text-primary mb-3" style="font-size: 2.5rem;"></i>
+                                <h5>NumPy</h5>
+                                <p class="small text-muted">Numerical operations</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-6 col-md-3 mb-4">
+                            <div class="p-3 h-100">
+                                <i class="fab fa-bootstrap text-primary mb-3" style="font-size: 2.5rem;"></i>
+                                <h5>Bootstrap</h5>
+                                <p class="small text-muted">Frontend framework</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-6 col-md-3 mb-4">
+                            <div class="p-3 h-100">
+                                <i class="fab fa-js text-primary mb-3" style="font-size: 2.5rem;"></i>
+                                <h5>JavaScript</h5>
+                                <p class="small text-muted">Interactive UI</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Load metrics data
+        $.ajax({
+            url: '/model_performance/poly',
+            type: 'GET',
+            success: function(response) {
+                $('#poly-r2-score').text(response.r2_score);
+            }
+        });
+        
+        $.ajax({
+            url: '/model_performance/lr',
+            type: 'GET',
+            success: function(response) {
+                $('#lr-accuracy').text(response.accuracy);
+                $('#lr-precision').text(response.precision);
+                $('#lr-recall').text(response.recall);
+            }
+        });
+        
+        $.ajax({
+            url: '/model_performance/knn',
+            type: 'GET',
+            success: function(response) {
+                if (response.accuracy) {
+                    $('#knn-accuracy').text((response.accuracy).toFixed(2));
+                }
+            }
+        });
+    });
+</script>
+{% endblock %} 

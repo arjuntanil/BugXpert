@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block title %}BugXpert - Bug Prediction{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Bug Prediction</li>
+        </ol>
+    </nav>
+
+    <!-- Title and Description -->
+    <div class="row mb-5">
+        <div class="col-12 text-center animate-on-scroll">
+            <h1 class="display-4 text-primary mb-3">Software Bug Prediction</h1>
+            <p class="lead">Predict the expected number of bugs based on your code complexity</p>
+        </div>
+    </div>
+    
+    <!-- Form Section -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h3 class="card-title text-center mb-4">Bug Prediction Model</h3>
+                    <form id="prediction-form" class="mb-4 no-loading">
+                        <div class="mb-4">
+                            <label for="lines_of_code" class="form-label">Lines of Code</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-code"></i></span>
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" id="lines_of_code" name="lines_of_code" placeholder="e.g., 1000" required>
+                            </div>
+                            <small class="text-muted">Enter the total lines of code (valid range: 100-3500)</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2">
+                            <i class="fas fa-calculator me-2"></i> Predict Number of Bugs
+                        </button>
+                    </form>
+                    
+                    <!-- Loading Indicator -->
+                    <div id="loading-indicator" class="text-center d-none">
+                        <div class="spinner-border text-primary mb-2" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p>Analyzing your code...</p>
+                    </div>
+                    
+                    <!-- Prediction Result -->
+                    <div id="prediction-result" class="d-none text-center">
+                        <div class="prediction-icon mx-auto">
+                            <i class="fas fa-bug fa-3x text-primary"></i>
+                        </div>
+                        <h4 class="mb-3">Prediction Result</h4>
+                        <div class="results-value" id="bug-count">0</div>
+                        <p class="results-label">Expected bugs in your code</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Information Section -->
+    <div class="row mb-5">
+        <div class="col-lg-10 mx-auto">
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h3 class="text-center mb-4">Understanding Bug Prediction</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="mb-3">How It Works</h5>
+                            <p>Our bug prediction model uses <strong>Polynomial Regression</strong> to analyze the relationship between:</p>
+                            <ul>
+                                <li>The complexity of your code (measured in lines of code)</li>
+                                <li>The expected number of bugs that will occur</li>
+                            </ul>
+                            <p>The model is trained on historical data from various software projects to predict with high accuracy how many bugs you can expect based on your codebase size.</p>
+                            
+                            <div class="alert alert-info mt-4">
+                                <div class="d-flex">
+                                    <div class="me-3">
+                                        <i class="fas fa-lightbulb fa-2x text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1">Best Practices</h5>
+                                        <p class="mb-0">For accurate predictions, ensure your code is properly structured and follows standard coding conventions. The prediction works best for projects with consistent coding standards.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <h5 class="mb-3">Example Interpretations</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Lines of Code</th>
+                                                <th>Predicted Bugs</th>
+                                                <th>Interpretation</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>500</td>
+                                                <td>~5</td>
+                                                <td>Low risk</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1500</td>
+                                                <td>~30</td>
+                                                <td>Medium risk</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3000</td>
+                                                <td>~120</td>
+                                                <td>High risk</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-light p-3 rounded">
+                                <h5 class="mb-2">Why This Matters</h5>
+                                <p>Understanding potential bug counts helps in:</p>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <ul class="small mb-0">
+                                            <li>Resource allocation</li>
+                                            <li>Testing strategies</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-6">
+                                        <ul class="small mb-0">
+                                            <li>Release planning</li>
+                                            <li>Quality assurance</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Validate lines of code input
+        const locInput = document.getElementById('lines_of_code');
+        
+        locInput.addEventListener('blur', function() {
+            const value = parseInt(this.value);
+            if (isNaN(value) || value < 100 || value > 3500) {
+                this.classList.add('is-invalid');
+                // Check if we need to add feedback message
+                if (!this.nextElementSibling || !this.nextElementSibling.classList.contains('invalid-feedback')) {
+                    const feedback = document.createElement('div');
+                    feedback.classList.add('invalid-feedback');
+                    feedback.textContent = 'Please enter a value between 100 and 3500';
+                    this.parentNode.insertBefore(feedback, this.nextSibling);
+                }
+            } else {
+                this.classList.remove('is-invalid');
+                if (this.nextElementSibling && this.nextElementSibling.classList.contains('invalid-feedback')) {
+                    this.nextElementSibling.remove();
+                }
+            }
+        });
+        
+        // Form submission
+        const predictionForm = document.getElementById('prediction-form');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const predictionResult = document.getElementById('prediction-result');
+        const bugCountElement = document.getElementById('bug-count');
+        
+        predictionForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const linesOfCode = parseInt(locInput.value);
+            
+            if (isNaN(linesOfCode) || linesOfCode < 100 || linesOfCode > 3500) {
+                alert('Please enter a value between 100 and 3500');
+                return;
+            }
+            
+            // Keep button enabled and maintain original text
+            // This ensures users can click again immediately if desired
+            
+            // Show loading indicator
+            loadingIndicator.classList.remove('d-none');
+            predictionResult.classList.add('d-none');
+            
+            // Use our global helper
+            handleLoadingState(true, loadingIndicator, predictionResult);
+            
+            // Create form data
+            const formData = new FormData();
+            formData.append('lines_of_code', linesOfCode);
+            
+            // Send fetch request
+            fetch('/predict_bugs', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Hide loading indicator
+                handleLoadingState(false, loadingIndicator);
+                
+                if (data.success) {
+                    // Show the prediction result
+                    predictionResult.classList.remove('d-none');
+                    
+                    // Animate the counter
+                    let count = 0;
+                    const target = data.prediction;
+                    const duration = 1000; // 1 second
+                    const step = target / (duration / 50); // Update every 50ms
+                    
+                    const counter = setInterval(function() {
+                        count += step;
+                        if (count >= target) {
+                            clearInterval(counter);
+                            count = target;
+                        }
+                        bugCountElement.textContent = Math.round(count);
+                    }, 50);
+                    
+                    // Add animation to the icon
+                    document.querySelector('.prediction-icon').classList.add('bounceIn');
+                } else {
+                    // Show error
+                    alert('Error: ' + (data.error || 'Failed to predict bugs'));
+                }
+            })
+            .catch(error => {
+                // Error handling is done by our global handler
+                console.error('Error:', error);
+            });
+        });
+    });
+</script>
+{% endblock %} 

@@ -1,0 +1,337 @@
+{% extends "base.html" %}
+
+{% block title %}BugXpert - Bug Classification{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Bug Classification</li>
+        </ol>
+    </nav>
+    
+    <!-- Title and Description -->
+    <div class="row mb-5">
+        <div class="col-12 text-center animate-on-scroll">
+            <h1 class="display-4 text-primary mb-3">Bug Criticality Classification</h1>
+            <p class="lead">Determine if your bugs are critical or non-critical to prioritize your debugging efforts</p>
+        </div>
+    </div>
+    
+    <!-- Form Section -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h3 class="card-title text-center mb-4">Classification Model</h3>
+                    <form id="criticality-form" class="mb-4 no-loading">
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-3">
+                                <label for="lr_lines_of_code" class="form-label">Lines of Code</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-code"></i></span>
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" id="lr_lines_of_code" name="lines_of_code" placeholder="e.g., 1000" required>
+                                </div>
+                                <small class="text-muted">Valid range: 100-4000</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="complexity_score" class="form-label">Complexity Score</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-project-diagram"></i></span>
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" id="complexity_score" name="complexity_score" placeholder="e.g., 15" required>
+                                </div>
+                                <small class="text-muted">Valid range: 1-50</small>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-3">
+                                <label for="bug_frequency" class="form-label">Bug Frequency</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-history"></i></span>
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" id="bug_frequency" name="bug_frequency" placeholder="e.g., 25" required>
+                                </div>
+                                <small class="text-muted">Valid range: 1-150</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="execution_time" class="form-label">Execution Time (ms)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" id="execution_time" name="execution_time" placeholder="e.g., 100" required>
+                                </div>
+                                <small class="text-muted">Valid range: 10-600</small>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2">
+                            <i class="fas fa-tag me-2"></i> Classify Bug
+                        </button>
+                    </form>
+                    
+                    <!-- Loading Indicator -->
+                    <div id="loading-indicator-class" class="text-center d-none">
+                        <div class="spinner-border text-primary mb-2" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p>Analyzing bug criticality...</p>
+                    </div>
+                    
+                    <!-- Classification Result -->
+                    <div id="criticality-result" class="d-none text-center">
+                        <div class="prediction-icon mx-auto" id="result-icon">
+                            <i class="fas fa-bug fa-3x text-primary"></i>
+                        </div>
+                        <h4 class="mb-3">Classification Result</h4>
+                        <div class="results-value" id="criticality-status"></div>
+                        <p class="results-label">Probability: <span id="criticality-probability" class="fw-bold"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Information Section -->
+    <div class="row mb-5">
+        <div class="col-lg-10 mx-auto">
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h3 class="text-center mb-4">Understanding Bug Classification</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="mb-3">Classification Process</h5>
+                            <p>Our bug classification model uses <strong>Logistic Regression</strong> to determine if a bug should be considered critical based on multiple features:</p>
+                            <div class="features-list">
+                                <div class="feature-item d-flex align-items-center mb-3">
+                                    <div class="feature-icon me-3">
+                                        <i class="fas fa-code text-primary"></i>
+                                    </div>
+                                    <div class="feature-text">
+                                        <strong>Lines of Code</strong>
+                                        <p class="small text-muted mb-0">More code often correlates with more complex bugs</p>
+                                    </div>
+                                </div>
+                                <div class="feature-item d-flex align-items-center mb-3">
+                                    <div class="feature-icon me-3">
+                                        <i class="fas fa-project-diagram text-primary"></i>
+                                    </div>
+                                    <div class="feature-text">
+                                        <strong>Complexity Score</strong>
+                                        <p class="small text-muted mb-0">Higher complexity indicates potential critical issues</p>
+                                    </div>
+                                </div>
+                                <div class="feature-item d-flex align-items-center mb-3">
+                                    <div class="feature-icon me-3">
+                                        <i class="fas fa-history text-primary"></i>
+                                    </div>
+                                    <div class="feature-text">
+                                        <strong>Bug Frequency</strong>
+                                        <p class="small text-muted mb-0">Frequently occurring bugs may indicate deeper problems</p>
+                                    </div>
+                                </div>
+                                <div class="feature-item d-flex align-items-center mb-3">
+                                    <div class="feature-icon me-3">
+                                        <i class="fas fa-clock text-primary"></i>
+                                    </div>
+                                    <div class="feature-text">
+                                        <strong>Execution Time</strong>
+                                        <p class="small text-muted mb-0">Longer execution times often correlate with critical bugs</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="classification-results mt-3 mb-4">
+                                <h5 class="mb-3">Classification Outcomes</h5>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card bg-success text-white">
+                                            <div class="card-body text-center p-3">
+                                                <i class="fas fa-check-circle fa-3x mb-3"></i>
+                                                <h5>Non-Critical</h5>
+                                                <p class="small mb-0">Normal priority fixes<br>Schedule for regular maintenance</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card bg-danger text-white">
+                                            <div class="card-body text-center p-3">
+                                                <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                                                <h5>Critical</h5>
+                                                <p class="small mb-0">Urgent priority fixes<br>Address immediately</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-light p-3 rounded">
+                                <h5 class="mb-2">Decision Boundary Examples</h5>
+                                <div class="mb-3">
+                                    <p class="small fw-bold text-success mb-1">Non-Critical Example:</p>
+                                    <ul class="small mb-0">
+                                        <li>Lines of Code: 800</li>
+                                        <li>Complexity Score: 5</li>
+                                        <li>Bug Frequency: 3</li>
+                                        <li>Execution Time: 40ms</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p class="small fw-bold text-danger mb-1">Critical Example:</p>
+                                    <ul class="small mb-0">
+                                        <li>Lines of Code: 2500</li>
+                                        <li>Complexity Score: 30</li>
+                                        <li>Bug Frequency: 50</li>
+                                        <li>Execution Time: 200ms</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Validate inputs on blur
+        const inputs = [
+            { id: 'lr_lines_of_code', min: 100, max: 4000 },
+            { id: 'complexity_score', min: 1, max: 50 },
+            { id: 'bug_frequency', min: 1, max: 150 },
+            { id: 'execution_time', min: 10, max: 600 }
+        ];
+        
+        inputs.forEach(input => {
+            const element = document.getElementById(input.id);
+            
+            element.addEventListener('blur', function() {
+                const value = parseInt(this.value);
+                if (isNaN(value) || value < input.min || value > input.max) {
+                    this.classList.add('is-invalid');
+                    if (!this.nextElementSibling || !this.nextElementSibling.classList.contains('invalid-feedback')) {
+                        const feedback = document.createElement('div');
+                        feedback.classList.add('invalid-feedback');
+                        feedback.textContent = `Please enter a value between ${input.min} and ${input.max}`;
+                        this.parentNode.insertBefore(feedback, this.nextSibling);
+                    }
+                } else {
+                    this.classList.remove('is-invalid');
+                    if (this.nextElementSibling && this.nextElementSibling.classList.contains('invalid-feedback')) {
+                        this.nextElementSibling.remove();
+                    }
+                }
+            });
+        });
+        
+        // Form submission
+        const criticalityForm = document.getElementById('criticality-form');
+        const loadingIndicator = document.getElementById('loading-indicator-class');
+        const criticalityResult = document.getElementById('criticality-result');
+        const resultIcon = document.getElementById('result-icon');
+        const criticalityStatus = document.getElementById('criticality-status');
+        const criticalityProbability = document.getElementById('criticality-probability');
+        
+        criticalityForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get values and validate
+            const linesOfCode = parseInt(document.getElementById('lr_lines_of_code').value);
+            const complexityScore = parseInt(document.getElementById('complexity_score').value);
+            const bugFrequency = parseInt(document.getElementById('bug_frequency').value);
+            const executionTime = parseInt(document.getElementById('execution_time').value);
+            
+            // Validation
+            if (isNaN(linesOfCode) || linesOfCode < 100 || linesOfCode > 4000) {
+                alert('Lines of Code must be between 100 and 4000');
+                return;
+            }
+            
+            if (isNaN(complexityScore) || complexityScore < 1 || complexityScore > 50) {
+                alert('Complexity Score must be between 1 and 50');
+                return;
+            }
+            
+            if (isNaN(bugFrequency) || bugFrequency < 1 || bugFrequency > 150) {
+                alert('Bug Frequency must be between 1 and 150');
+                return;
+            }
+            
+            if (isNaN(executionTime) || executionTime < 10 || executionTime > 600) {
+                alert('Execution Time must be between 10ms and 600ms');
+                return;
+            }
+            
+            // Keep button enabled and maintain original text
+            // This ensures users can click again immediately if desired
+
+            // Show loading indicator
+            loadingIndicator.classList.remove('d-none');
+            criticalityResult.classList.add('d-none');
+            
+            // Alternative method using our global helper
+            handleLoadingState(true, loadingIndicator, criticalityResult);
+            
+            // Create form data
+            const formData = new FormData();
+            formData.append('lines_of_code', linesOfCode);
+            formData.append('complexity_score', complexityScore);
+            formData.append('bug_frequency', bugFrequency);
+            formData.append('execution_time', executionTime);
+            
+            // Send fetch request
+            fetch('/predict_criticality', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Hide loading indicator
+                handleLoadingState(false, loadingIndicator);
+                
+                if (data.success) {
+                    // Show the classification result
+                    criticalityResult.classList.remove('d-none');
+                    
+                    const isCritical = data.is_critical;
+                    const probabilityText = data.probability + ' (' + (data.probability * 100).toFixed(2) + '%)';
+                    
+                    // Update the icon and class
+                    if (isCritical) {
+                        resultIcon.innerHTML = '<i class="fas fa-exclamation-triangle fa-3x text-danger"></i>';
+                        criticalityStatus.classList.add('text-danger');
+                        criticalityStatus.classList.remove('text-success');
+                    } else {
+                        resultIcon.innerHTML = '<i class="fas fa-check-circle fa-3x text-success"></i>';
+                        criticalityStatus.classList.add('text-success');
+                        criticalityStatus.classList.remove('text-danger');
+                    }
+                    
+                    // Set the text with animation
+                    criticalityStatus.textContent = data.status;
+                    criticalityProbability.textContent = probabilityText;
+                    
+                    // Add animation
+                    resultIcon.classList.add('bounceIn');
+                    resultIcon.style.animation = 'bounceIn 0.8s';
+                } else {
+                    // Show error
+                    alert('Error: ' + (data.error || 'Failed to classify bug'));
+                }
+            })
+            .catch(error => {
+                // Error handling is done by our global handler
+                console.error('Error:', error);
+            });
+        });
+    });
+</script>
+{% endblock %} 

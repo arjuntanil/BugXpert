@@ -1,0 +1,431 @@
+{% extends "base.html" %}
+
+{% block title %}BugXpert - Software Bug Prediction & Classification System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240,245,255,0.95) 100%);
+        padding: 5rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMTI4MCAxNDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEyODAgMEw2NDAgNzAgMCAwdjE0MGgxMjgwVjB6IiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMykiLz48L3N2Zz4=');
+        background-size: 100% 100%;
+        opacity: 0.4;
+        z-index: 0;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #4a6cf7 0%, #24bddf 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 1.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.8rem;
+        font-weight: 500;
+        margin-bottom: 2rem;
+        min-height: 4rem;
+    }
+    
+    .floating-icon {
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    .particles-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 0;
+    }
+    
+    .particle {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(74, 108, 247, 0.2);
+        animation: move-particles 15s infinite linear;
+    }
+    
+    .feature-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        background: #fff;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+    
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(74, 108, 247, 0.1) 0%, rgba(36, 189, 223, 0.1) 100%);
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .feature-card:hover::before {
+        opacity: 1;
+    }
+    
+    .icon-wrapper {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        background: linear-gradient(135deg, rgba(74, 108, 247, 0.1) 0%, rgba(36, 189, 223, 0.1) 100%);
+        transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover .icon-wrapper {
+        transform: scale(1.1);
+        background: linear-gradient(135deg, rgba(74, 108, 247, 0.2) 0%, rgba(36, 189, 223, 0.2) 100%);
+    }
+    
+    .step-card {
+        background-color: #fff;
+        border-radius: 15px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        height: 100%;
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .step-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        background: linear-gradient(135deg, #4a6cf7 0%, #24bddf 100%);
+        z-index: -1;
+        transition: width 0.3s ease;
+    }
+    
+    .step-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .step-card:hover::before {
+        width: 100%;
+        opacity: 0.1;
+    }
+    
+    .step-number {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4a6cf7 0%, #24bddf 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .section-title {
+        position: relative;
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+    
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background: linear-gradient(135deg, #4a6cf7 0%, #24bddf 100%);
+    }
+    
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+        100% { transform: translateY(0px); }
+    }
+    
+    @keyframes move-particles {
+        0% { transform: translateY(0) translateX(0); }
+        25% { transform: translateY(100px) translateX(100px); }
+        50% { transform: translateY(200px) translateX(0); }
+        75% { transform: translateY(100px) translateX(-100px); }
+        100% { transform: translateY(0) translateX(0); }
+    }
+    
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="particles-container">
+        <div class="particle" style="width: 20px; height: 20px; top: 10%; left: 10%;"></div>
+        <div class="particle" style="width: 15px; height: 15px; top: 20%; left: 70%;"></div>
+        <div class="particle" style="width: 25px; height: 25px; top: 60%; left: 30%;"></div>
+        <div class="particle" style="width: 10px; height: 10px; top: 80%; left: 80%;"></div>
+        <div class="particle" style="width: 18px; height: 18px; top: 40%; left: 90%;"></div>
+    </div>
+    
+    <div class="container">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-6 hero-content animate-on-scroll">
+                <h1 class="hero-title">BugXpert</h1>
+                <h2 class="hero-subtitle"><span class="typed-text"></span></h2>
+                <p class="lead mb-4">An intelligent system that uses machine learning algorithms to predict bugs, classify their criticality, and assess code quality.</p>
+                <div class="d-flex flex-wrap gap-3 mt-4">
+                    <a href="/predict-bugs" class="btn btn-primary btn-lg">
+                        <i class="fas fa-chart-line me-2"></i> Predict Bugs
+                    </a>
+                    <a href="/classify-bugs" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-tag me-2"></i> Classify Bugs
+                    </a>
+                    <a href="/code-quality" class="btn btn-info text-white btn-lg">
+                        <i class="fas fa-code-branch me-2"></i> Code Quality
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 mt-5 mt-lg-0 text-center animate-on-scroll" data-delay="200">
+                <div class="position-relative">
+                    <img src="{{ url_for('static', filename='images/bug-illustration.svg') }}" alt="Bug Illustration" class="img-fluid floating-icon" onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/2621/2621303.png'; this.classList.add('w-50')">
+                    <div class="position-absolute" style="top: 20%; right: 15%;">
+                        <i class="fas fa-code text-primary floating-icon" style="font-size: 3rem; animation-delay: 0.5s;"></i>
+                    </div>
+                    <div class="position-absolute" style="bottom: 20%; left: 15%;">
+                        <i class="fas fa-check-circle text-success floating-icon" style="font-size: 2.5rem; animation-delay: 1s;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="section-title fw-bold animate-on-scroll">Our Features</h2>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="feature-card h-100 animate-on-scroll" data-delay="0" data-href="/predict-bugs">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-chart-line fa-2x text-primary"></i>
+                        </div>
+                        <h3 class="card-title h4">Bug Prediction</h3>
+                        <p class="card-text">Predict the number of bugs expected in your code based on complexity metrics using Polynomial Regression.</p>
+                        <a href="/predict-bugs" class="btn btn-outline-primary mt-3">
+                            Try It Now <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card h-100 animate-on-scroll" data-delay="200" data-href="/classify-bugs">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-tag fa-2x text-primary"></i>
+                        </div>
+                        <h3 class="card-title h4">Bug Classification</h3>
+                        <p class="card-text">Determine if a bug is critical or non-critical based on its characteristics using Logistic Regression.</p>
+                        <a href="/classify-bugs" class="btn btn-outline-primary mt-3">
+                            Try It Now <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card h-100 animate-on-scroll" data-delay="400" data-href="/code-quality">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-code-branch fa-2x text-primary"></i>
+                        </div>
+                        <h3 class="card-title h4">Code Quality</h3>
+                        <p class="card-text">Classify your software modules as high, medium, or low quality using K-Nearest Neighbors algorithm.</p>
+                        <a href="/code-quality" class="btn btn-outline-primary mt-3">
+                            Try It Now <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="section-title fw-bold animate-on-scroll">How It Works</h2>
+        
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="step-card animate-on-scroll" data-delay="0">
+                    <div class="step-number">1</div>
+                    <div class="step-icon mb-3">
+                        <i class="fas fa-code text-primary" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <h4 class="h5">Input Data</h4>
+                    <p class="small text-muted">Enter your code metrics, bug characteristics, or error information</p>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-4">
+                <div class="step-card animate-on-scroll" data-delay="200">
+                    <div class="step-number">2</div>
+                    <div class="step-icon mb-3">
+                        <i class="fas fa-cogs text-primary" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <h4 class="h5">Analysis</h4>
+                    <p class="small text-muted">Our ML models analyze your data against trained patterns</p>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-4">
+                <div class="step-card animate-on-scroll" data-delay="400">
+                    <div class="step-number">3</div>
+                    <div class="step-icon mb-3">
+                        <i class="fas fa-brain text-primary" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <h4 class="h5">Prediction</h4>
+                    <p class="small text-muted">Get accurate predictions, classifications, or quality assessments</p>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-4">
+                <div class="step-card animate-on-scroll" data-delay="600">
+                    <div class="step-number">4</div>
+                    <div class="step-icon mb-3">
+                        <i class="fas fa-check-double text-primary" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <h4 class="h5">Act</h4>
+                    <p class="small text-muted">Implement solutions and improve your code quality</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+<script>
+$(document).ready(function() {
+    // Typed.js initialization
+    var typed = new Typed('.typed-text', {
+        strings: [
+            "Predict Bugs Before They Happen", 
+            "Classify Critical Issues", 
+            "Assess Code Quality with KNN",
+            "Improve Software Quality"
+        ],
+        typeSpeed: 50,
+        backSpeed: 30,
+        backDelay: 2000,
+        loop: true
+    });
+    
+    // Add click event to feature cards
+    $('.feature-card').click(function() {
+        const href = $(this).find('a').attr('href');
+        if (href) {
+            window.location.href = href;
+        }
+    });
+    
+    // Create a more dynamic animation on scroll
+    const animateElements = document.querySelectorAll('.animate-on-scroll');
+    
+    function checkIfInView() {
+        const windowHeight = window.innerHeight;
+        const windowTopPosition = window.scrollY;
+        const windowBottomPosition = windowTopPosition + windowHeight;
+        
+        animateElements.forEach(element => {
+            const elementHeight = element.offsetHeight;
+            const elementTopPosition = element.offsetTop;
+            const elementBottomPosition = elementTopPosition + elementHeight;
+            
+            // Calculate the delay based on data attribute
+            const delay = element.getAttribute('data-delay') || 0;
+            
+            // Check if element is in view
+            if (elementBottomPosition >= windowTopPosition && elementTopPosition <= windowBottomPosition) {
+                setTimeout(() => {
+                    element.classList.add('visible');
+                    element.style.opacity = 1;
+                    element.style.transform = 'translateY(0)';
+                }, delay);
+            }
+        });
+    }
+    
+    // Apply initial styles to animate-on-scroll elements
+    animateElements.forEach(element => {
+        element.style.opacity = 0;
+        element.style.transform = 'translateY(20px)';
+        element.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+    });
+    
+    // Run once to initialize
+    checkIfInView();
+    
+    // Run on scroll
+    window.addEventListener('scroll', checkIfInView);
+});
+</script>
+{% endblock %} 

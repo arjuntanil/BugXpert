@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block title %}BugXpert - Software Bug Prediction & Classification{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow-lg mb-4">
+            <div class="card-header bg-primary text-white">
+                <h2 class="card-title text-center mb-0">Bug Prediction Model</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-4">
+                            <h4>Predict Number of Bugs</h4>
+                            <p>Enter the number of lines of code to predict the expected number of bugs:</p>
+                            <form id="prediction-form" class="mt-3">
+                                <div class="mb-3">
+                                    <label for="lines_of_code" class="form-label">Lines of Code</label>
+                                    <input type="number" class="form-control" id="lines_of_code" name="lines_of_code" required min="100" max="3500">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Predict</button>
+                            </form>
+                        </div>
+                        <div id="prediction-result" class="alert alert-success d-none">
+                            <h5>Prediction Result:</h5>
+                            <p>Expected number of bugs: <span id="bug-count" class="fw-bold"></span></p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="poly-model-performance" class="mt-3">
+                            <h4>Model Performance</h4>
+                            <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Logistic Regression Model Card -->
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow-lg mb-4">
+            <div class="card-header bg-primary text-white">
+                <h2 class="card-title text-center mb-0">Bug Classification Model</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-4">
+                            <h4>Classify Bug Criticality</h4>
+                            <p>Enter bug details to classify if it's critical or non-critical:</p>
+                            <form id="criticality-form" class="mt-3">
+                                <div class="mb-3">
+                                    <label for="lr_lines_of_code" class="form-label">Lines of Code</label>
+                                    <input type="number" class="form-control" id="lr_lines_of_code" name="lines_of_code" required min="100" max="4000">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="complexity_score" class="form-label">Complexity Score (1-50)</label>
+                                    <input type="number" class="form-control" id="complexity_score" name="complexity_score" required min="1" max="50">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="bug_frequency" class="form-label">Bug Frequency</label>
+                                    <input type="number" class="form-control" id="bug_frequency" name="bug_frequency" required min="1" max="150">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="execution_time" class="form-label">Execution Time (ms)</label>
+                                    <input type="number" class="form-control" id="execution_time" name="execution_time" required min="10" max="600">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Classify</button>
+                            </form>
+                        </div>
+                        <div id="criticality-result" class="alert d-none">
+                            <h5>Classification Result:</h5>
+                            <p id="criticality-status" class="fw-bold"></p>
+                            <p>Probability: <span id="criticality-probability" class="fw-bold"></span></p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="lr-model-performance" class="mt-3">
+                            <h4>Model Performance</h4>
+                            <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3" id="about">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow-lg">
+            <div class="card-header bg-primary text-white">
+                <h2 class="card-title text-center mb-0">About BugXpert</h2>
+            </div>
+            <div class="card-body">
+                <h4>Software Bug Prediction & Classification System</h4>
+                <p>BugXpert helps software developers detect and fix bugs efficiently before release.</p>
+                
+                <h5 class="mt-4">Machine Learning Techniques Used</h5>
+                <div class="mb-3">
+                    <h6>Polynomial Regression – Predict Number of Bugs in Software Release</h6>
+                    <ul>
+                        <li><strong>Goal:</strong> Estimate the number of software bugs before release based on code complexity.</li>
+                        <li><strong>How it Works:</strong> The system collects historical software project data (lines of code, complexity, past bugs), trains a Polynomial Regression model, and predicts the expected bug count.</li>
+                        <li><strong>Input:</strong> Code complexity, project size</li>
+                        <li><strong>Output:</strong> Predicted number of bugs in the upcoming release</li>
+                    </ul>
+                </div>
+                
+                <div class="mb-3">
+                    <h6>Logistic Regression – Classify Bugs as "Critical" vs. "Non-Critical"</h6>
+                    <ul>
+                        <li><strong>Goal:</strong> Identify whether a bug is critical or non-critical based on historical data.</li>
+                        <li><strong>How it Works:</strong> The system collects bug reports with severity labels, trains a Logistic Regression model, and classifies new bugs.</li>
+                        <li><strong>Input:</strong> Lines of code, complexity score, bug frequency, execution time</li>
+                        <li><strong>Output:</strong> "Critical Bug" or "Non-Critical Bug" classification</li>
+                    </ul>
+                </div>
+                
+                <div class="alert alert-info">
+                    <p class="mb-0">Coming soon: K-Nearest Neighbors (KNN) for additional bug classification capabilities.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    $(document).ready(function() {
+        // Load polynomial regression model performance data
+        $.ajax({
+            url: '/model_performance/poly',
+            type: 'GET',
+            success: function(response) {
+                // Display model performance metrics
+                var performanceHtml = `
+                    <h4>Polynomial Regression Performance</h4>
+                    <div class="alert alert-info">
+                        <p><strong>R² Score:</strong> ${response.r2_score}</p>
+                        <p><strong>Mean Squared Error:</strong> ${response.mse}</p>
+                    </div>
+                    <div class="text-center">
+                        <img src="data:image/png;base64,${response.plot}" alt="Model Performance Plot" class="img-fluid">
+                    </div>
+                `;
+                $('#poly-model-performance').html(performanceHtml);
+            },
+            error: function(error) {
+                console.error('Error loading polynomial model performance:', error);
+                $('#poly-model-performance').html('<div class="alert alert-danger">Error loading model performance data</div>');
+            }
+        });
+        
+        // Load logistic regression model performance data
+        $.ajax({
+            url: '/model_performance/lr',
+            type: 'GET',
+            success: function(response) {
+                // Display model performance metrics
+                var performanceHtml = `
+                    <h4>Logistic Regression Performance</h4>
+                    <div class="alert alert-info">
+                        <p><strong>Accuracy:</strong> ${response.accuracy}</p>
+                        <p><strong>Precision:</strong> ${response.precision}</p>
+                        <p><strong>Recall:</strong> ${response.recall}</p>
+                        <p><strong>F1 Score:</strong> ${response.f1_score}</p>
+                        <p><strong>ROC AUC:</strong> ${response.roc_auc}</p>
+                    </div>
+                    <div class="text-center mt-3">
+                        <h5>ROC Curve</h5>
+                        <img src="data:image/png;base64,${response.roc_plot}" alt="ROC Curve" class="img-fluid mb-3">
+                        
+                        <h5>Feature Importance</h5>
+                        <img src="data:image/png;base64,${response.feature_importance_plot}" alt="Feature Importance" class="img-fluid">
+                    </div>
+                `;
+                $('#lr-model-performance').html(performanceHtml);
+            },
+            error: function(error) {
+                console.error('Error loading logistic regression model performance:', error);
+                $('#lr-model-performance').html('<div class="alert alert-danger">Error loading model performance data</div>');
+            }
+        });
+
+        // Handle polynomial regression form submission
+        $('#prediction-form').submit(function(e) {
+            e.preventDefault();
+            
+            $.ajax({
+                url: '/predict_bugs',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        $('#bug-count').text(response.prediction);
+                        $('#prediction-result').removeClass('d-none').addClass('d-block');
+                    } else {
+                        alert('Error: ' + response.error);
+                    }
+                },
+                error: function(error) {
+                    console.error('Error making prediction:', error);
+                    alert('An error occurred while making the prediction');
+                }
+            });
+        });
+        
+        // Handle logistic regression form submission
+        $('#criticality-form').submit(function(e) {
+            e.preventDefault();
+            
+            $.ajax({
+                url: '/predict_criticality',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        $('#criticality-status').text(response.status);
+                        $('#criticality-probability').text(response.probability + ' (' + (response.probability * 100).toFixed(2) + '%)');
+                        
+                        // Set alert color based on result
+                        $('#criticality-result')
+                            .removeClass('d-none alert-success alert-warning')
+                            .addClass('d-block ' + (response.is_critical ? 'alert-danger' : 'alert-success'));
+                    } else {
+                        alert('Error: ' + response.error);
+                    }
+                },
+                error: function(error) {
+                    console.error('Error making classification:', error);
+                    alert('An error occurred while classifying the bug');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %} 

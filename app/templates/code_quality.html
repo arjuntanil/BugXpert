@@ -1,0 +1,353 @@
+{% extends 'base.html' %}
+
+{% block title %}Code Quality Classification - BugXpert{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Code Quality Classification</li>
+        </ol>
+    </nav>
+
+    <!-- Title and Description -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 text-primary mb-3">Code Quality Classification</h1>
+            <p class="lead">Use K-Nearest Neighbors algorithm to classify your software modules into High, Medium, or Low quality categories based on code metrics.</p>
+        </div>
+    </div>
+
+    <!-- Form Section -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="card-title text-center mb-4">Enter Module Metrics</h3>
+                    <form id="codeQualityForm" class="no-loading">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="lines_of_code" class="form-label">Lines of Code (LOC)</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fas fa-code"></i></span>
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" id="lines_of_code" placeholder="e.g., 500" required>
+                                </div>
+                                <small class="text-muted">Valid range: 100-10000</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="complexity_score" class="form-label">Complexity Score</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fas fa-project-diagram"></i></span>
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" id="complexity_score" placeholder="e.g., 15" required>
+                                </div>
+                                <small class="text-muted">Valid range: 1-100</small>
+                            </div>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="execution_time" class="form-label">Execution Time (ms)</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" id="execution_time" placeholder="e.g., 200" required>
+                                </div>
+                                <small class="text-muted">Valid range: 1-1000</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="defect_density" class="form-label">Defect Density (bugs/KLOC)</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fas fa-bug"></i></span>
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" id="defect_density" placeholder="e.g., 5" required>
+                                </div>
+                                <small class="text-muted">Valid range: 0-50</small>
+                            </div>
+                        </div>
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary px-4 py-2">
+                                <i class="fas fa-search me-2"></i>Classify Code Quality
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section (Initially Hidden) -->
+    <div class="row justify-content-center mb-5" id="resultsSection" style="display: none;">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h3 class="card-title text-center mb-4">Classification Result</h3>
+                    <div class="text-center mb-4">
+                        <div class="classification-result-icon mb-3">
+                            <i id="qualityIcon" class="fas fa-award fa-4x"></i>
+                        </div>
+                        <h2 id="qualityResult" class="mb-2">High Quality</h2>
+                        <p id="qualityDescription" class="lead">Excellent code with minimal defects and good performance.</p>
+                    </div>
+
+                    <div class="row quality-metrics text-center">
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <i class="fas fa-bug text-danger mb-2"></i>
+                                    <h5>Defect Risk</h5>
+                                    <p id="defectRisk" class="mb-0">Low</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <i class="fas fa-tachometer-alt text-warning mb-2"></i>
+                                    <h5>Performance</h5>
+                                    <p id="performanceLevel" class="mb-0">Good</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <i class="fas fa-tools text-info mb-2"></i>
+                                    <h5>Maintainability</h5>
+                                    <p id="maintainabilityLevel" class="mb-0">High</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <h4 class="mb-3">Suggestions:</h4>
+                        <ul id="suggestionsList" class="list-group">
+                            <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i>Continue with current development practices</li>
+                            <li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i>Consider peer reviews to maintain quality</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Indicator (Initially Hidden) -->
+    <div class="row justify-content-center mb-5" id="loadingSection" style="display: none;">
+        <div class="col-md-8 text-center">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Analyzing code metrics...</p>
+        </div>
+    </div>
+
+    <!-- How It Works Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="text-center mb-4">How KNN Classification Works</h3>
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <img src="{{ url_for('static', filename='images/knn_visualization.png') }}" alt="KNN Visualization" class="img-fluid rounded">
+                        </div>
+                        <div class="col-md-6">
+                            <ol class="list-group list-group-numbered">
+                                <li class="list-group-item">We analyze your code metrics (LOC, complexity, etc.)</li>
+                                <li class="list-group-item">The KNN algorithm finds the 3 nearest neighbors in our dataset</li>
+                                <li class="list-group-item">Your module is classified based on the majority class of those neighbors</li>
+                                <li class="list-group-item">You receive targeted suggestions based on the classification</li>
+                            </ol>
+                            <div class="mt-4">
+                                <h5>Classification Categories:</h5>
+                                <div class="d-flex justify-content-between mt-3">
+                                    <div class="text-center px-2">
+                                        <span class="badge bg-success p-2 mb-2">High Quality</span>
+                                        <p class="small mb-0">Defect Density: 0-4</p>
+                                    </div>
+                                    <div class="text-center px-2">
+                                        <span class="badge bg-warning p-2 mb-2">Medium Quality</span>
+                                        <p class="small mb-0">Defect Density: 5-15</p>
+                                    </div>
+                                    <div class="text-center px-2">
+                                        <span class="badge bg-danger p-2 mb-2">Low Quality</span>
+                                        <p class="small mb-0">Defect Density: >15</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Form validation
+    const codeQualityForm = document.getElementById('codeQualityForm');
+    const locInput = document.getElementById('lines_of_code');
+    const complexityInput = document.getElementById('complexity_score');
+    const executionTimeInput = document.getElementById('execution_time');
+    const defectDensityInput = document.getElementById('defect_density');
+    
+    // Validate input fields
+    function validateNumericInput(input, min, max) {
+        const value = parseInt(input.value);
+        if (isNaN(value) || value < min || value > max) {
+            input.classList.add('is-invalid');
+            if (!input.nextElementSibling || !input.nextElementSibling.classList.contains('invalid-feedback')) {
+                const feedback = document.createElement('div');
+                feedback.classList.add('invalid-feedback');
+                feedback.textContent = `Please enter a value between ${min} and ${max}`;
+                input.parentNode.insertBefore(feedback, input.nextSibling);
+            }
+            return false;
+        } else {
+            input.classList.remove('is-invalid');
+            if (input.nextElementSibling && input.nextElementSibling.classList.contains('invalid-feedback')) {
+                input.nextElementSibling.remove();
+            }
+            return true;
+        }
+    }
+    
+    // Add validation on blur
+    locInput.addEventListener('blur', function() {
+        validateNumericInput(this, 100, 10000);
+    });
+    
+    complexityInput.addEventListener('blur', function() {
+        validateNumericInput(this, 1, 100);
+    });
+    
+    executionTimeInput.addEventListener('blur', function() {
+        validateNumericInput(this, 1, 1000);
+    });
+    
+    defectDensityInput.addEventListener('blur', function() {
+        validateNumericInput(this, 0, 50);
+    });
+    
+    // Form submission
+    codeQualityForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Validate all inputs
+        const locValid = validateNumericInput(locInput, 100, 10000);
+        const complexityValid = validateNumericInput(complexityInput, 1, 100);
+        const executionTimeValid = validateNumericInput(executionTimeInput, 1, 1000);
+        const defectDensityValid = validateNumericInput(defectDensityInput, 0, 50);
+        
+        if (locValid && complexityValid && executionTimeValid && defectDensityValid) {
+            // Keep button enabled and maintain original text
+            // This ensures users can click again immediately if desired
+            
+            // Show loading using our global loading state manager
+            const loadingSection = document.getElementById('loadingSection');
+            const resultsSection = document.getElementById('resultsSection');
+            handleLoadingState(true, loadingSection, resultsSection);
+            
+            // Create form data
+            const formData = new FormData();
+            formData.append('lines_of_code', locInput.value);
+            formData.append('complexity_score', complexityInput.value);
+            formData.append('execution_time', executionTimeInput.value);
+            formData.append('defect_density', defectDensityInput.value);
+            
+            // Send fetch request to backend
+            fetch('/predict_code_quality', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Always hide loading indicator
+                handleLoadingState(false, loadingSection);
+                
+                if (data.success) {
+                    // Get the quality class and details
+                    const qualityClass = data.quality_class;
+                    let iconClass = 'fa-star text-warning';
+                    let description = 'Average code quality with moderate defect density and acceptable performance.';
+                    let defectRisk = 'Moderate';
+                    let performance = 'Average';
+                    let maintainability = 'Medium';
+                    let suggestions = [];
+                    
+                    // Set values based on quality class
+                    if (qualityClass === 'High') {
+                        iconClass = 'fa-award text-success';
+                        description = 'Excellent code with minimal defects and good performance.';
+                        defectRisk = 'Low';
+                        performance = 'Good';
+                        maintainability = 'High';
+                        suggestions = [
+                            'Continue with current development practices',
+                            'Consider peer reviews to maintain quality',
+                            'Document your successful practices for team knowledge sharing'
+                        ];
+                    } else if (qualityClass === 'Low') {
+                        iconClass = 'fa-exclamation-triangle text-danger';
+                        description = 'Poor code quality with high defect density and performance issues.';
+                        defectRisk = 'High';
+                        performance = 'Poor';
+                        maintainability = 'Low';
+                        suggestions = [
+                            'Refactor complex parts of the code',
+                            'Implement more unit tests to catch bugs early',
+                            'Review algorithm efficiency to improve execution time',
+                            'Consider code review sessions to identify improvement areas'
+                        ];
+                    } else {
+                        // Medium quality suggestions
+                        suggestions = [
+                            'Focus on reducing complexity in key functions',
+                            'Add more test cases to improve coverage',
+                            'Review code documentation for clarity',
+                            'Consider performance optimizations in critical paths'
+                        ];
+                    }
+                    
+                    // Update the UI with the results
+                    document.getElementById('qualityIcon').className = 'fas ' + iconClass + ' fa-4x bounceIn';
+                    document.getElementById('qualityResult').textContent = qualityClass + ' Quality';
+                    document.getElementById('qualityDescription').textContent = description;
+                    document.getElementById('defectRisk').textContent = defectRisk;
+                    document.getElementById('performanceLevel').textContent = performance;
+                    document.getElementById('maintainabilityLevel').textContent = maintainability;
+                    
+                    // Update suggestions
+                    const suggestionsList = document.getElementById('suggestionsList');
+                    suggestionsList.innerHTML = '';
+                    suggestions.forEach(function(suggestion) {
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item';
+                        li.innerHTML = '<i class="fas fa-check-circle text-success me-2"></i>' + suggestion;
+                        suggestionsList.appendChild(li);
+                    });
+                    
+                    // Show results
+                    resultsSection.style.display = 'block';
+                    
+                    // Scroll to results
+                    resultsSection.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    // Show error
+                    alert('Error: ' + (data.error || 'Failed to classify code quality'));
+                }
+            })
+            .catch(error => {
+                // Hide loading indicator on error - handled by our global error handler
+                console.error('Error:', error);
+            });
+        }
+    });
+});
+</script>
+{% endblock %}
