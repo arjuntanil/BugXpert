@@ -14,6 +14,9 @@ from knn_quality_model import predict_code_quality, get_neighbors_info, load_knn
 
 app = Flask(__name__, template_folder='app/templates', static_folder='app/static')
 
+# Set environment config
+app.config['DEBUG'] = os.environ.get('FLASK_ENV') == 'development'
+
 # Polynomial Regression Model Class
 class PolynomialRegressionModel:
     def __init__(self, degree=3):
@@ -395,14 +398,13 @@ def knn_model_performance():
 
 if __name__ == '__main__':
     print("Starting BugXpert - Software Bug Prediction & Classification System...")
-    print("Access the application at http://127.0.0.1:5000/")
     
     # Print all defined routes for debugging (only in development)
-    print("\nDefined Routes:")
-    for rule in app.url_map.iter_rules():
-        print(f"{rule.endpoint}: {rule.rule}")
+    if app.config['DEBUG']:
+        print("\nDefined Routes:")
+        for rule in app.url_map.iter_rules():
+            print(f"{rule.endpoint}: {rule.rule}")
     
     # Use environment variables in production, otherwise use debug mode
     port = int(os.environ.get("PORT", 5000))
-    debug_mode = os.environ.get("FLASK_ENV") != "production"
-    app.run(host='0.0.0.0', port=port, debug=debug_mode) 
+    app.run(host='0.0.0.0', port=port, debug=app.config['DEBUG']) 

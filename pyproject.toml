@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=65.5.1", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bugxpert"
+version = "1.0.0"
+description = "BugXpert - Software Bug Prediction & Classification System"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+    {name = "BugXpert Team"}
+]
+
+[tool.setuptools]
+packages = ["app"] 
