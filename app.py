@@ -397,9 +397,12 @@ if __name__ == '__main__':
     print("Starting BugXpert - Software Bug Prediction & Classification System...")
     print("Access the application at http://127.0.0.1:5000/")
     
-    # Print all defined routes for debugging
+    # Print all defined routes for debugging (only in development)
     print("\nDefined Routes:")
     for rule in app.url_map.iter_rules():
         print(f"{rule.endpoint}: {rule.rule}")
     
-    app.run(debug=True) 
+    # Use environment variables in production, otherwise use debug mode
+    port = int(os.environ.get("PORT", 5000))
+    debug_mode = os.environ.get("FLASK_ENV") != "production"
+    app.run(host='0.0.0.0', port=port, debug=debug_mode) 

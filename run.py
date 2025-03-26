@@ -1,141 +1,28 @@
-from flask import Flask, render_template, request, jsonify
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import io
-import base64
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import r2_score, mean_squared_error
-import joblib
+"""
+This file is used for deployment on Render.
+It ensures the models are loaded and ready before serving the application.
+"""
+
 import os
+import joblib
+import pandas as pd
+import numpy as np
+from flask import Flask
 
-app = Flask(__name__, template_folder='app/templates', static_folder='app/static')
+# Import the app
+from app import app as application
 
-# Polynomial Regression Model Class
-class PolynomialRegressionModel:
-    def __init__(self, degree=3):
-        self.degree = degree
-        self.poly = PolynomialFeatures(degree=degree)
-        self.model = LinearRegression()
-        self.r2_score = None
-        self.mse = None
-        self.X = None
-        self.y = None
-        self.X_train = None
-        self.X_test = None
-        self.y_train = None
-        self.y_test = None
-        
-    def train_model(self, dataset_path='PR_Dataset.csv'):
-        # Load the dataset directly using hardcoded path
-        df = pd.read_csv("PR_Dataset.csv")
-        
-        # Select independent (X) and dependent (y) variables
-        self.X = df.iloc[:, 0:1].values  # 'lines_of_code'
-        self.y = df.iloc[:, 1].values    # 'num_bugs'
-        
-        # Split the dataset into Training and Testing sets
-        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
-            self.X, self.y, test_size=0.2, random_state=42
-        )
-        
-        # Apply Polynomial Regression
-        X_poly_train = self.poly.fit_transform(self.X_train)
-        
-        # Train the model
-        self.model.fit(X_poly_train, self.y_train)
-        
-        # Evaluate the model
-        X_poly_test = self.poly.transform(self.X_test)
-        y_pred = self.model.predict(X_poly_test)
-        
-        # Calculate metrics
-        self.r2_score = r2_score(self.y_test, y_pred)
-        self.mse = mean_squared_error(self.y_test, y_pred)
-        
-        # Save the model
-        model_dir = os.path.dirname(os.path.abspath(__file__))
-        joblib.dump(self.model, os.path.join(model_dir, 'bug_prediction_model.pkl'))
-        joblib.dump(self.poly, os.path.join(model_dir, 'polynomial_features.pkl'))
-        
-        return self.r2_score
-    
-    def predict(self, lines_of_code):
-        # Convert input to numpy array and reshape
-        lines_of_code = np.array([lines_of_code]).reshape(-1, 1)
-        
-        # Transform input with polynomial features
-        X_poly = self.poly.transform(lines_of_code)
-        
-        # Make prediction
-        prediction = self.model.predict(X_poly)[0]
-        
-        return prediction
-    
-    def get_model_performance(self):
-        # Generate visualization
-        plt.figure(figsize=(10, 6))
-        
-        # Plot actual data points
-        plt.scatter(self.X, self.y, color='red', label='Actual Data')
-        
-        # Generate smooth curve for prediction line
-        X_grid = np.arange(min(self.X), max(self.X), 1).reshape(-1, 1)
-        X_poly_grid = self.poly.transform(X_grid)
-        y_grid_pred = self.model.predict(X_poly_grid)
-        
-        # Plot regression line
-        plt.plot(X_grid, y_grid_pred, color='blue', label=f'Polynomial Regression (degree={self.degree})')
-        
-        # Set labels and title
-        plt.xlabel("Lines of Code")
-        plt.ylabel("Number of Bugs")
-        plt.title("Polynomial Regression - Bug Prediction")
-        plt.legend()
-        
-        # Save plot to memory
-        buf = io.BytesIO()
-        plt.savefig(buf, format='png')
-        buf.seek(0)
-        plot_url = base64.b64encode(buf.getvalue()).decode('utf-8')
-        plt.close()
-        
-        # Return performance metrics and plot
-        return {
-            'r2_score': round(self.r2_score, 4),
-            'mse': round(self.mse, 4),
-            'plot': plot_url
-        }
+# Ensure the app static directories exist
+os.makedirs('app/static/images', exist_ok=True)
 
-# Initialize and train the model
-model = PolynomialRegressionModel()
-model.train_model()
+# Check if models exist, if not, create them
+if not os.path.exists("code_quality_knn_model.pkl"):
+    print("Initializing KNN model...")
+    import knn_quality_model
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/predict', methods=['POST'])
-def predict():
-    try:
-        lines_of_code = int(request.form['lines_of_code'])
-        prediction = model.predict(lines_of_code)
-        return jsonify({
-            'success': True,
-            'prediction': round(prediction, 2)
-        })
-    except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        })
-
-@app.route('/model_performance')
-def model_performance():
-    performance = model.get_model_performance()
-    return jsonify(performance)
-
-if __name__ == '__main__':
-    app.run(debug=True) 
+if __name__ == "__main__":
+    # This is used when running locally only.
+    # When deploying to Render, Render will use gunicorn 
+    # which uses the app variable in app.py
+    port = int(os.environ.get("PORT", 5000))
+    application.run(host='0.0.0.0', port=port) 

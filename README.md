@@ -1,89 +1,43 @@
-# BugXpert
+# BugXpert - Software Bug Prediction & Classification System
 
-BugXpert is a Software Bug Detection and Classification System that helps software developers detect and fix bugs efficiently before release.
+BugXpert is a web-based application that uses machine learning models to predict and classify software bugs based on various code metrics.
 
-## 🛠️ Machine Learning Techniques Used
+## Features
 
-### 1️⃣ Polynomial Regression – Predict Number of Bugs in Software Release
-- **Goal**: Estimate the number of software bugs before release based on code complexity.
-- **How it Works**:
-  - Collects historical software project data (lines of code, complexity, past bugs).
-  - Trains a Polynomial Regression model to predict expected bug count.
-  - Outputs the estimated number of bugs in the next release.
-- **Example**:
-  - Input: Code complexity, project size, number of developers, past bug trends.
-  - Output: Predicted number of bugs in the upcoming release.
+- **Bug Prediction**: Uses Polynomial Regression to predict the number of bugs based on lines of code
+- **Bug Classification**: Uses Logistic Regression to classify bugs as critical or non-critical
+- **Code Quality Classification**: Uses K-Nearest Neighbors (KNN) to classify code quality as High, Medium, or Low
 
-## Project Structure
+## Technologies Used
 
-```
-BugXpert/
-│
-├── app/
-│   ├── models/
-│   │   ├── __init__.py
-│   │   └── polynomial_regression.py
-│   ├── static/
-│   │   ├── css/
-│   │   │   └── style.css
-│   │   └── js/
-│   │       └── main.js
-│   └── templates/
-│       ├── base.html
-│       └── index.html
-│
-├── PR_Dataset.csv
-├── app.py
-├── requirements.txt
-└── README.md
-```
+- Flask web framework
+- Scikit-learn for machine learning models
+- Pandas and NumPy for data processing
+- Matplotlib for data visualization
+- Bootstrap for UI components
 
-## Setup and Installation
+## Local Development
 
-1. Clone the repository:
-```
-git clone https://github.com/yourusername/BugXpert.git
-cd BugXpert
-```
+1. Clone the repository
+2. Install dependencies: `pip install -r requirements.txt`
+3. Run the application: `python app.py`
+4. Access the application at http://127.0.0.1:5000/
 
-2. Create a virtual environment:
-```
-python -m venv venv
-```
+## Deployment
 
-3. Activate the virtual environment:
-   - On Windows:
-   ```
-   venv\Scripts\activate
-   ```
-   - On macOS and Linux:
-   ```
-   source venv/bin/activate
-   ```
+This application is configured for easy deployment to Render:
 
-4. Install the required packages:
-```
-pip install -r requirements.txt
-```
+1. Fork or clone this repository to your GitHub account
+2. Create a new Web Service on Render
+3. Connect your GitHub repository
+4. Render will automatically build and deploy the application
 
-5. Run the application:
-```
-python app.py
-```
+## Dataset Information
 
-6. Open your web browser and go to `http://127.0.0.1:5000/` to access BugXpert.
-
-## Future Enhancements
-
-- **K-Nearest Neighbors (KNN)** - For bug classification
-- **Logistic Regression** - For bug severity prediction
-
-## Dataset
-
-The project uses `PR_Dataset.csv` for training the Polynomial Regression model, which contains:
-- `lines_of_code`: Independent variable representing code complexity
-- `num_bugs`: Dependent variable representing the number of bugs
+- `PR_Dataset.csv`: Contains data for polynomial regression model (lines of code vs. number of bugs)
+- `LR_Dataset.csv`: Contains data for logistic regression model (code metrics vs. bug criticality)
+- `KNN_Dataset.csv`: Contains data for KNN model (code metrics vs. code quality)
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details. 
+MIT License 
